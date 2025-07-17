@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Boleta de Venta - HOTDOGZ</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f2f2f2;
+    }
+    .producto {
+      margin-bottom: 10px;
+    }
+    #boleta {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🐾 Tienda de Mascotas HOTDOGZ 🐾</h1>
+  <h2>Menú de Productos</h2>
+  <div id="productos"></div>
+
+  <h3>Seleccione una opción:</h3>
+  <select id="opcion">
+    <option value="0">Seleccione...</option>
+    <option value="1">Abrigo impermeable</option>
+    <option value="2">Mr. Charlie Hoodie</option>
+    <option value="3">Mint and Pink Stripes Hoodie</option>
+    <option value="4">Comida para perros</option>
+    <option value="5">Comida para gatos</option>
+    <option value="6">Salir y mostrar boleta</option>
+  </select>
+  <button onclick="seleccionarProducto()">Aceptar</button>
+
+  <div id="inputExtra"></div>
+
+  <div id="boleta"></div>
+
+  <script>
+    const productos = [
+      { codigo: 1, nombre: "Abrigo impermeable", precio: 89 },
+      { codigo: 2, nombre: "Mr. Charlie Hoodie", precio: 55 },
+      { codigo: 3, nombre: "Mint and Pink Stripes Hoodie", precio: 65 },
+      { codigo: 4, nombre: "Comida para perros", precio: 12 },
+      { codigo: 5, nombre: "Comida para gatos", precio: 10 }
+    ];
+
+    let boleta = [];
+    let total = 0;
+
+    const divProductos = document.getElementById('productos');
+    productos.forEach(p => {
+      const div = document.createElement('div');
+      div.classList.add('producto');
+      div.textContent = `${p.codigo}. ${p.nombre} (S/ ${p.precio})`;
+      divProductos.appendChild(div);
+    });
+
+    function seleccionarProducto() {
+      const opcion = parseInt(document.getElementById("opcion").value);
+      const inputDiv = document.getElementById("inputExtra");
+      inputDiv.innerHTML = ""; // limpiar inputs anteriores
+
+      if (opcion >= 1 && opcion <= 3) {
+        const prod = productos[opcion - 1];
+        inputDiv.innerHTML = `
+          <p>${prod.nombre} - S/ ${prod.precio}</p>
+          <label>¿Cuántas prendas desea comprar?</label>
+          <input type="number" id="cantidad" min="1"><br>
+          <label>¿Qué talla desea? (S, M, L, XL)</label>
+          <input type="text" id="talla"><br>
+          <button onclick="agregarPrenda(${opcion})">Agregar</button>
+        `;
+      } else if (opcion === 4 || opcion === 5) {
+        const prod = productos[opcion - 1];
+        inputDiv.innerHTML = `
+          <p>${prod.nombre} - S/ ${prod.precio} por kg</p>
+          <label>¿Cuántos kilogramos desea comprar?</label>
+          <input type="number" id="kg" min="0.1" step="0.1"><br>
+          <button onclick="agregarComida(${opcion})">Agregar</button>
+        `;
+      } else if (opcion === 6) {
+        mostrarBoleta();
+      } else {
+        alert("Opción no válida.");
+      }
+    }
+
+    function agregarPrenda(opcion) {
+      const cantidad = parseInt(document.getElementById("cantidad").value);
+      const talla = document.getElementById("talla").value.toUpperCase();
+      if (cantidad > 0 && ["S", "M", "L", "XL"].includes(talla)) {
+        const prod = productos[opcion - 1];
+        const subtotal = cantidad * prod.precio;
+        total += subtotal;
+        boleta.push(`${cantidad} ${prod.nombre} - talla ${talla} : S/ ${subtotal.toFixed(2)}`);
+        alert("Producto agregado a la boleta.");
+        document.getElementById("inputExtra").innerHTML = "";
+      } else {
+        alert("Ingrese datos válidos.");
+      }
+    }
+
+    function agregarComida(opcion) {
+      const kg = parseFloat(document.getElementById("kg").value);
+      if (kg > 0) {
+        const prod = productos[opcion - 1];
+        const subtotal = kg * prod.precio;
+        total += subtotal;
+        boleta.push(`${kg} kg ${prod.nombre} : S/ ${subtotal.toFixed(2)}`);
+        alert("Producto agregado a la boleta.");
+        document.getElementById("inputExtra").innerHTML = "";
+      } else {
+        alert("Ingrese una cantidad válida.");
+      }
+    }
+
+    function mostrarBoleta() {
+      let resultado = "<h2>------ BOLETA DE VENTA ------</h2>";
+      boleta.forEach(item => {
+        resultado += `<p>${item}</p>`;
+      });
+      resultado += "<hr>";
+      resultado += `<strong>TOTAL A PAGAR: S/ ${total.toFixed(2)}</strong>`;
+      document.getElementById("boleta").innerHTML = resultado;
+    }
+  </script>
+
+</body>
+</html>
