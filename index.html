@@ -10,13 +10,17 @@
       background: #f2f2f2;
     }
     .producto {
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     #boleta {
       background: #fff;
       border: 1px solid #ccc;
       padding: 15px;
       margin-top: 20px;
+    }
+    select, input, button {
+      margin-top: 5px;
+      margin-bottom: 10px;
     }
   </style>
 </head>
@@ -44,28 +48,33 @@
 
   <script>
     const productos = [
-      { codigo: 1, nombre: "Abrigo impermeable", precio: 89 },
-      { codigo: 2, nombre: "Mr. Charlie Hoodie", precio: 55 },
-      { codigo: 3, nombre: "Mint and Pink Stripes Hoodie", precio: 65 },
-      { codigo: 4, nombre: "Comida para perros", precio: 12 },
-      { codigo: 5, nombre: "Comida para gatos", precio: 10 }
+      { codigo: 1, nombre: "Abrigo impermeable", precio: 89, stock: 10 },
+      { codigo: 2, nombre: "Mr. Charlie Hoodie", precio: 55, stock: 8 },
+      { codigo: 3, nombre: "Mint and Pink Stripes Hoodie", precio: 65, stock: 6 },
+      { codigo: 4, nombre: "Comida para perros", precio: 12, stock: 50 }, // en kg
+      { codigo: 5, nombre: "Comida para gatos", precio: 10, stock: 40 }
     ];
 
     let boleta = [];
     let total = 0;
 
     const divProductos = document.getElementById('productos');
-    productos.forEach(p => {
-      const div = document.createElement('div');
-      div.classList.add('producto');
-      div.textContent = `${p.codigo}. ${p.nombre} (S/ ${p.precio})`;
-      divProductos.appendChild(div);
-    });
+    function mostrarProductos() {
+      divProductos.innerHTML = "";
+      productos.forEach(p => {
+        const div = document.createElement('div');
+        div.classList.add('producto');
+        div.textContent = `${p.codigo}. ${p.nombre} (S/ ${p.precio}) - Stock: ${p.stock}${p.codigo >= 4 ? " kg" : " unidades"}`;
+        divProductos.appendChild(div);
+      });
+    }
+
+    mostrarProductos();
 
     function seleccionarProducto() {
       const opcion = parseInt(document.getElementById("opcion").value);
       const inputDiv = document.getElementById("inputExtra");
-      inputDiv.innerHTML = ""; // limpiar inputs anteriores
+      inputDiv.innerHTML = "";
 
       if (opcion >= 1 && opcion <= 3) {
         const prod = productos[opcion - 1];
@@ -95,27 +104,41 @@
     function agregarPrenda(opcion) {
       const cantidad = parseInt(document.getElementById("cantidad").value);
       const talla = document.getElementById("talla").value.toUpperCase();
+      const prod = productos[opcion - 1];
+
       if (cantidad > 0 && ["S", "M", "L", "XL"].includes(talla)) {
-        const prod = productos[opcion - 1];
-        const subtotal = cantidad * prod.precio;
-        total += subtotal;
-        boleta.push(`${cantidad} ${prod.nombre} - talla ${talla} : S/ ${subtotal.toFixed(2)}`);
-        alert("Producto agregado a la boleta.");
-        document.getElementById("inputExtra").innerHTML = "";
+        if (cantidad <= prod.stock) {
+          const subtotal = cantidad * prod.precio;
+          total += subtotal;
+          prod.stock -= cantidad;
+          boleta.push(`${cantidad} ${prod.nombre} - talla ${talla} : S/ ${subtotal.toFixed(2)}`);
+          alert("Producto agregado a la boleta.");
+          document.getElementById("inputExtra").innerHTML = "";
+          mostrarProductos();
+        } else {
+          alert(`Stock insuficiente. Solo quedan ${prod.stock} unidades.`);
+        }
       } else {
-        alert("Ingrese datos válidos.");
+        alert("Ingrese datos válidos y una talla correcta.");
       }
     }
 
     function agregarComida(opcion) {
       const kg = parseFloat(document.getElementById("kg").value);
+      const prod = productos[opcion - 1];
+
       if (kg > 0) {
-        const prod = productos[opcion - 1];
-        const subtotal = kg * prod.precio;
-        total += subtotal;
-        boleta.push(`${kg} kg ${prod.nombre} : S/ ${subtotal.toFixed(2)}`);
-        alert("Producto agregado a la boleta.");
-        document.getElementById("inputExtra").innerHTML = "";
+        if (kg <= prod.stock) {
+          const subtotal = kg * prod.precio;
+          total += subtotal;
+          prod.stock -= kg;
+          boleta.push(`${kg} kg ${prod.nombre} : S/ ${subtotal.toFixed(2)}`);
+          alert("Producto agregado a la boleta.");
+          document.getElementById("inputExtra").innerHTML = "";
+          mostrarProductos();
+        } else {
+          alert(`Stock insuficiente. Solo quedan ${prod.stock} kg disponibles.`);
+        }
       } else {
         alert("Ingrese una cantidad válida.");
       }
@@ -123,11 +146,15 @@
 
     function mostrarBoleta() {
       let resultado = "<h2>------ BOLETA DE VENTA ------</h2>";
-      boleta.forEach(item => {
-        resultado += `<p>${item}</p>`;
-      });
-      resultado += "<hr>";
-      resultado += `<strong>TOTAL A PAGAR: S/ ${total.toFixed(2)}</strong>`;
+      if (boleta.length === 0) {
+        resultado += "<p>No se compró ningún producto.</p>";
+      } else {
+        boleta.forEach(item => {
+          resultado += `<p>${item}</p>`;
+        });
+        resultado += "<hr>";
+        resultado += `<strong>TOTAL A PAGAR: S/ ${total.toFixed(2)}</strong>`;
+      }
       document.getElementById("boleta").innerHTML = resultado;
     }
   </script>
