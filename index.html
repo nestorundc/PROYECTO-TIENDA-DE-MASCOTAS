@@ -48,9 +48,9 @@
 
   <script>
     const productos = [
-      { codigo: 1, nombre: "Abrigo impermeable", precio: 89, stock: 10 },
-      { codigo: 2, nombre: "Mr. Charlie Hoodie", precio: 55, stock: 8 },
-      { codigo: 3, nombre: "Mint and Pink Stripes Hoodie", precio: 65, stock: 6 },
+      { codigo: 1, nombre: "Abrigo impermeable", precio: 89, stock: { S: 3, M: 4, L: 3, XL: 2 } },
+      { codigo: 2, nombre: "Mr. Charlie Hoodie", precio: 55, stock: { S: 2, M: 3, L: 2, XL: 1 } },
+      { codigo: 3, nombre: "Mint and Pink Stripes Hoodie", precio: 65, stock: { S: 2, M: 2, L: 1, XL: 1 } },
       { codigo: 4, nombre: "Comida para perros", precio: 12, stock: 50 }, // en kg
       { codigo: 5, nombre: "Comida para gatos", precio: 10, stock: 40 }
     ];
@@ -58,13 +58,20 @@
     let boleta = [];
     let total = 0;
 
-    const divProductos = document.getElementById('productos');
     function mostrarProductos() {
+      const divProductos = document.getElementById('productos');
       divProductos.innerHTML = "";
       productos.forEach(p => {
         const div = document.createElement('div');
         div.classList.add('producto');
-        div.textContent = `${p.codigo}. ${p.nombre} (S/ ${p.precio}) - Stock: ${p.stock}${p.codigo >= 4 ? " kg" : " unidades"}`;
+        let stockTexto = "";
+        if (p.codigo <= 3) {
+          const st = p.stock;
+          stockTexto = `Stock - S: ${st.S}, M: ${st.M}, L: ${st.L}, XL: ${st.XL}`;
+        } else {
+          stockTexto = `Stock: ${p.stock} kg`;
+        }
+        div.textContent = `${p.codigo}. ${p.nombre} (S/ ${p.precio}) - ${stockTexto}`;
         divProductos.appendChild(div);
       });
     }
@@ -80,11 +87,11 @@
         const prod = productos[opcion - 1];
         inputDiv.innerHTML = `
           <p>${prod.nombre} - S/ ${prod.precio}</p>
-          <label>¿Cuántas prendas desea comprar?</label>
-          <input type="number" id="cantidad" min="1"><br>
-          <label>¿Qué talla desea? (S, M, L, XL)</label>
-          <input type="text" id="talla"><br>
-          <button onclick="agregarPrenda(${opcion})">Agregar</button>
+          <label>Cantidad S:</label> <input type="number" id="cantS" min="0" value="0"><br>
+          <label>Cantidad M:</label> <input type="number" id="cantM" min="0" value="0"><br>
+          <label>Cantidad L:</label> <input type="number" id="cantL" min="0" value="0"><br>
+          <label>Cantidad XL:</label> <input type="number" id="cantXL" min="0" value="0"><br>
+          <button onclick="agregarPrendaPorTallas(${opcion})">Agregar</button>
         `;
       } else if (opcion === 4 || opcion === 5) {
         const prod = productos[opcion - 1];
@@ -101,26 +108,45 @@
       }
     }
 
-    function agregarPrenda(opcion) {
-      const cantidad = parseInt(document.getElementById("cantidad").value);
-      const talla = document.getElementById("talla").value.toUpperCase();
-      const prod = productos[opcion - 1];
+    function agregarPrendaPorTallas(opcion) {
+      const cantS = parseInt(document.getElementById("cantS").value) || 0;
+      const cantM = parseInt(document.getElementById("cantM").value) || 0;
+      const cantL = parseInt(document.getElementById("cantL").value) || 0;
+      const cantXL = parseInt(document.getElementById("cantXL").value) || 0;
 
-      if (cantidad > 0 && ["S", "M", "L", "XL"].includes(talla)) {
-        if (cantidad <= prod.stock) {
+      const prod = productos[opcion - 1];
+      const tallas = { S: cantS, M: cantM, L: cantL, XL: cantXL };
+      let algoSeVaAComprar = false;
+
+      for (let t in tallas) {
+        if (tallas[t] > 0) {
+          algoSeVaAComprar = true;
+          if (tallas[t] > prod.stock[t]) {
+            alert(`No hay suficiente stock para talla ${t}. Solo quedan ${prod.stock[t]}.`);
+            return;
+          }
+        }
+      }
+
+      if (!algoSeVaAComprar) {
+        alert("Debe ingresar al menos una cantidad mayor a 0.");
+        return;
+      }
+
+      // Agregar a boleta y restar stock
+      for (let t in tallas) {
+        const cantidad = tallas[t];
+        if (cantidad > 0) {
           const subtotal = cantidad * prod.precio;
           total += subtotal;
-          prod.stock -= cantidad;
-          boleta.push(`${cantidad} ${prod.nombre} - talla ${talla} : S/ ${subtotal.toFixed(2)}`);
-          alert("Producto agregado a la boleta.");
-          document.getElementById("inputExtra").innerHTML = "";
-          mostrarProductos();
-        } else {
-          alert(`Stock insuficiente. Solo quedan ${prod.stock} unidades.`);
+          prod.stock[t] -= cantidad;
+          boleta.push(`${cantidad} ${prod.nombre} - talla ${t} : S/ ${subtotal.toFixed(2)}`);
         }
-      } else {
-        alert("Ingrese datos válidos y una talla correcta.");
       }
+
+      alert("Producto(s) agregado(s) a la boleta.");
+      document.getElementById("inputExtra").innerHTML = "";
+      mostrarProductos();
     }
 
     function agregarComida(opcion) {
