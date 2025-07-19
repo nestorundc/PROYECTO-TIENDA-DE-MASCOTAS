@@ -2,32 +2,15 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Boleta de Venta - HOTDOGZ</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background: #f2f2f2;
-    }
-    .producto {
-      margin-bottom: 8px;
-    }
-    #boleta {
-      background: #fff;
-      border: 1px solid #ccc;
-      padding: 15px;
-      margin-top: 20px;
-    }
-    select, input, button {
-      margin-top: 5px;
-      margin-bottom: 10px;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <h1>🐾 Tienda de Mascotas HOTDOGZ 🐾</h1>
-  <h2>Menú de Productos</h2>
+  <h1>
+    <img src="imgs/logo.webp" alt="logo" class="logo">
+  </h1>
   <div id="productos"></div>
 
   <h3>Seleccione una opción:</h3>
@@ -48,31 +31,50 @@
 
   <script>
     const productos = [
-      { codigo: 1, nombre: "Abrigo impermeable", precio: 89, stock: { S: 3, M: 4, L: 3, XL: 2 } },
-      { codigo: 2, nombre: "Mr. Charlie Hoodie", precio: 55, stock: { S: 2, M: 3, L: 2, XL: 1 } },
-      { codigo: 3, nombre: "Mint and Pink Stripes Hoodie", precio: 65, stock: { S: 2, M: 2, L: 1, XL: 1 } },
-      { codigo: 4, nombre: "Comida para perros", precio: 12, stock: 50 }, // en kg
-      { codigo: 5, nombre: "Comida para gatos", precio: 10, stock: 40 }
+      { codigo: 1, nombre: "Abrigo impermeable", precio: 89.00, img: "imgs/producto-1.webp", stock: { S: 3, M: 4, L: 3, XL: 2 } },
+      { codigo: 2, nombre: "Mr. Charlie Hoodie", precio: 55, img: "imgs/producto-2.webp", stock: { S: 2, M: 3, L: 2, XL: 1 } },
+      { codigo: 3, nombre: "Mint and Pink Stripes Hoodie", img: "imgs/producto-3.webp", precio: 65, stock: { S: 2, M: 2, L: 1, XL: 1 } },
+      { codigo: 19, nombre: "Comida para perros", precio: 12, img: "imgs/producto-19.webp", stock: 50 }, // en kg
+      { codigo: 20, nombre: "Comida para gatos", precio: 10, img: "imgs/producto-20.webp", stock: 40 }
     ];
 
     let boleta = [];
     let total = 0;
 
+
     function mostrarProductos() {
       const divProductos = document.getElementById('productos');
-      divProductos.innerHTML = "";
+      divProductos.innerHTML = '';
+      
       productos.forEach(p => {
-        const div = document.createElement('div');
-        div.classList.add('producto');
-        let stockTexto = "";
-        if (p.codigo <= 3) {
-          const st = p.stock;
-          stockTexto = `Stock - S: ${st.S}, M: ${st.M}, L: ${st.L}, XL: ${st.XL}`;
-        } else {
-          stockTexto = `Stock: ${p.stock} kg`;
-        }
-        div.textContent = `${p.codigo}. ${p.nombre} (S/ ${p.precio}) - ${stockTexto}`;
-        divProductos.appendChild(div);
+        const productCard = document.createElement('div');
+        productCard.classList.add('productCard');
+
+
+        // Div para imagen del producto
+        const divImg = document.createElement('div');
+        divImg.classList.add('divImg');
+        const img = document.createElement('img');
+        img.src = p.img 
+        img.alt = p.nombre;
+        divImg.appendChild(img);
+
+        // Div para información del producto
+        const divInformacion = document.createElement('div');
+        divInformacion.classList.add('divInformacion');
+        const nombre = document.createElement('h3');
+        nombre.textContent = p.nombre;
+        const precio = document.createElement('h4');
+        precio.textContent = `S/ ${p.precio}`;
+        divInformacion.appendChild(nombre);
+        divInformacion.appendChild(precio);
+
+        // Agregar ambos divs a la card del producto
+        productCard.appendChild(divImg);
+        productCard.appendChild(divInformacion);
+
+        // Agregar card de productos al contenedor principal
+        divProductos.appendChild(productCard);
       });
     }
 
