@@ -14,16 +14,10 @@
   <div id="productos"></div>
 
   <h3>Seleccione una opción:</h3>
-  <select id="opcion">
-    <option value="0">Seleccione...</option>
-    <option value="1">Abrigo impermeable</option>
-    <option value="2">Mr. Charlie Hoodie</option>
-    <option value="3">Mint and Pink Stripes Hoodie</option>
-    <option value="4">Comida para perros</option>
-    <option value="5">Comida para gatos</option>
-    <option value="6">Salir y mostrar boleta</option>
-  </select>
-  <button onclick="seleccionarProducto()">Aceptar</button>
+<select id="opcion">
+</select>
+<button onclick="seleccionarProducto()">Aceptar</button>
+
 
   <div id="inputExtra"></div>
 
@@ -31,11 +25,35 @@
 
   <script>
     const productos = [
-      { codigo: 1, nombre: "Abrigo impermeable", precio: 89.00, img: "imgs/producto-1.webp", stock: { S: 3, M: 4, L: 3, XL: 2 } },
-      { codigo: 2, nombre: "Mr. Charlie Hoodie", precio: 55, img: "imgs/producto-2.webp", stock: { S: 2, M: 3, L: 2, XL: 1 } },
-      { codigo: 3, nombre: "Mint and Pink Stripes Hoodie", img: "imgs/producto-3.webp", precio: 65, stock: { S: 2, M: 2, L: 1, XL: 1 } },
-      { codigo: 19, nombre: "Comida para perros", precio: 12, img: "imgs/producto-19.webp", stock: 50 }, // en kg
-      { codigo: 20, nombre: "Comida para gatos", precio: 10, img: "imgs/producto-20.webp", stock: 40 }
+      { codigo: 1, nombre: "Abrigo Impermeable para perro", img: "imgs/p1.webp", precio: { S: 89, M: 99, L: 109, XL: 129 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 2, nombre: "Chompa para perro Funky Retro", img: "imgs/p2.webp", precio: { S: 69, M: 74, L: 77, XL: 81 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 3, nombre: "Chompa para perro Velero Rojo", img: "imgs/p3.webp", precio: { S: 69, M: 72, L: 74, XL: 77 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 4, nombre: "Chompa para perro Eco Trenza Plomo Azulado", img: "imgs/p4.webp", precio: { S: 65, M: 67, L: 68, XL: 69 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 5, nombre: "Chompa para perro Rombo Fucsia", img: "imgs/p5.webp", precio: { S: 65, M: 70, L: 75, XL: 85 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 6, nombre: "Chompa para perro Chess", img: "imgs/p6.webp", precio: { S: 69, M: 73, L: 77, XL: 85 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 7, nombre: "Mr. Charlie Hoodie para perro", img: "imgs/p7.png", precio: { S: 55, M: 60, L: 63, XL: 65 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 8, nombre: "Chompa para perro Happy Hour", img: "imgs/p8.webp", precio: { S: 81, M: 81, L: 81, XL: 81 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 9, nombre: "Mint and Pink Stripes Hoodie para perro", img: "imgs/p9.webp", precio: { S: 55, M: 60, L: 63, XL: 65 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 10, nombre: "Green Stripes Hoodie para perro", img: "imgs/p10.webp", precio: { S: 55, M: 60, L: 63, XL: 65 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 11, nombre: "Chompa para perro Fried Eggs", img: "imgs/p11.webp", precio: { S: 69, M: 69, L: 69, XL: 69 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 12, nombre: "Chompa para perro Rombo Azul", img: "imgs/p12.webp", precio: { S: 65, M: 70, L: 75, XL: 85 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 13, nombre: "Chompa para perro Multicolor Stripes Orange", img: "imgs/p13.webp", precio: { S: 81, M: 81, L: 81, XL: 81 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 14, nombre: "Berry Fun Hoodie para perro", img: "imgs/p14.webp", precio: { S: 55, M: 55, L: 55, XL: 55 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 15, nombre: "Chompa para perro Piña Colada", img: "imgs/p15.webp", precio: { S: 69, M: 72, L: 74, XL: 77 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 16, nombre: "Chompa para perro Floral", img: "imgs/p16.webp", precio: { S: 69, M: 69, L: 69, XL: 69 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 17, nombre: "Chompa para perro Hearts", img: "imgs/p17.webp", precio: { S: 77, M: 77, L: 77, XL: 77 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 18, nombre: "Chompa para perro Army Camouflage", img: "imgs/p18.webp", precio: { S: 65, M: 70, L: 75, XL: 85 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 19, nombre: "Chompa para perro Eco Trenza Jean", img: "imgs/p19.webp", precio: { S: 65, M: 70, L: 75, XL: 81 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 20, nombre: "Chompa para perro Eco Trenza Celeste", img: "imgs/p20.webp", precio: { S: 65, M: 67, L: 68, XL: 69 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 21, nombre: "Chompa para perro Eco Trenza Rojo Rosa", img: "imgs/p21.png", precio: { S: 65, M: 67, L: 68, XL: 69 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 22, nombre: "Chompa para Perro Escocés", img: "imgs/p22.png", precio: { S: 65, M: 67, L: 70, XL: 73 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 23, nombre: "Baby Pink Stripes Hoodie para perro", img: "imgs/p23.png", precio: { S: 55, M: 58, L: 59, XL: 60 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 24, nombre: "Polo para perro Safari", img: "imgs/p24.png", precio: { S: 50, M: 52, L: 53, XL: 55 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 25, nombre: "Polo para perro Shark Tanktop", img: "imgs/p25.webp", precio: { S: 50, M: 52, L: 53, XL: 55 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 26, nombre: "Orca Hoodie para perro", img: "imgs/p26.jpg", precio: { S: 55, M: 60, L: 63, XL: 65 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 27, nombre: "Sky Wing Hoodie", img: "imgs/p27.png", precio: { S: 55, M: 57, L: 58, XL: 60 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+      { codigo: 28, nombre: "Comida para perros", precio: 12, img: "imgs/comida-perros.webp", stock: 50 },
+      { codigo: 29, nombre: "Comida para gatos", precio: 10, img: "imgs/comida-gatos.webp", stock: 40 }
     ];
 
     let boleta = [];
@@ -65,7 +83,8 @@
         const nombre = document.createElement('h3');
         nombre.textContent = p.nombre;
         const precio = document.createElement('h4');
-        precio.textContent = `S/ ${p.precio}`;
+        const precios = Object.entries(p.precio).map(([talla, precio]) => `${talla}: S/ ${precio}`).join(" | ");
+        precio.textContent = precios;
         divInformacion.appendChild(nombre);
         divInformacion.appendChild(precio);
 
@@ -79,36 +98,56 @@
     }
 
     mostrarProductos();
+    function llenarOpciones() {
+  const select = document.getElementById("opcion");
+  select.innerHTML = `<option value="0">Seleccione...</option>`;
 
-    function seleccionarProducto() {
-      const opcion = parseInt(document.getElementById("opcion").value);
-      const inputDiv = document.getElementById("inputExtra");
-      inputDiv.innerHTML = "";
+  productos.forEach((p, index) => {
+    const option = document.createElement("option");
+    option.value = p.codigo;
+    option.textContent = p.nombre;
+    select.appendChild(option);
+  });
 
-      if (opcion >= 1 && opcion <= 3) {
-        const prod = productos[opcion - 1];
-        inputDiv.innerHTML = `
-          <p>${prod.nombre} - S/ ${prod.precio}</p>
-          <label>Cantidad S:</label> <input type="number" id="cantS" min="0" value="0"><br>
-          <label>Cantidad M:</label> <input type="number" id="cantM" min="0" value="0"><br>
-          <label>Cantidad L:</label> <input type="number" id="cantL" min="0" value="0"><br>
-          <label>Cantidad XL:</label> <input type="number" id="cantXL" min="0" value="0"><br>
-          <button onclick="agregarPrendaPorTallas(${opcion})">Agregar</button>
+  const salir = document.createElement("option");
+  salir.value = "999";
+  salir.textContent = "Salir y mostrar boleta";
+  select.appendChild(salir);
+}
+
+llenarOpciones();
+
+  function seleccionarProducto() {
+    const seleccion = parseInt(document.getElementById("opcion").value);
+    const producto = productos[seleccion];
+    const inputExtra = document.getElementById("inputExtra");
+    inputExtra.innerHTML = "";
+
+    if (!producto) return;
+
+    if (!producto.precioKg && !producto.precio) return;
+
+    if (producto.precioKg) {
+      inputExtra.innerHTML = `
+        <label>Cantidad en kilogramos: </label>
+        <input type="number" id="cantidadKg" min="0.1" step="0.1">
+        <button onclick="comprarComida(${seleccion})">Comprar</button>
+      `;
+    } else {
+
+      let html = `<h4>${producto.nombre}</h4>`;
+      for (let talla in producto.precio) {
+        html += `
+          <div>
+            <label>${talla} (S/.${producto.precio[talla]}): </label>
+            <input type="number" id="cant_${talla}" min="0" max="${producto.stock[talla]}" placeholder="0 (stock: ${producto.stock[talla]})">
+          </div>
         `;
-      } else if (opcion === 4 || opcion === 5) {
-        const prod = productos[opcion - 1];
-        inputDiv.innerHTML = `
-          <p>${prod.nombre} - S/ ${prod.precio} por kg</p>
-          <label>¿Cuántos kilogramos desea comprar?</label>
-          <input type="number" id="kg" min="0.1" step="0.1"><br>
-          <button onclick="agregarComida(${opcion})">Agregar</button>
-        `;
-      } else if (opcion === 6) {
-        mostrarBoleta();
-      } else {
-        alert("Opción no válida.");
       }
+      html += `<button onclick="comprarRopa(${seleccion})">Comprar</button>`;
+      inputExtra.innerHTML = html;
     }
+  }
 
     function agregarPrendaPorTallas(opcion) {
       const cantS = parseInt(document.getElementById("cantS").value) || 0;
@@ -116,7 +155,7 @@
       const cantL = parseInt(document.getElementById("cantL").value) || 0;
       const cantXL = parseInt(document.getElementById("cantXL").value) || 0;
 
-      const prod = productos[opcion - 1];
+      const prod = productos.find(p => p.codigo === opcion);
       const tallas = { S: cantS, M: cantM, L: cantL, XL: cantXL };
       let algoSeVaAComprar = false;
 
@@ -139,7 +178,7 @@
       for (let t in tallas) {
         const cantidad = tallas[t];
         if (cantidad > 0) {
-          const subtotal = cantidad * prod.precio;
+          const subtotal = cantidad * prod.precio[t];
           total += subtotal;
           prod.stock[t] -= cantidad;
           boleta.push(`${cantidad} ${prod.nombre} - talla ${t} : S/ ${subtotal.toFixed(2)}`);
@@ -153,7 +192,7 @@
 
     function agregarComida(opcion) {
       const kg = parseFloat(document.getElementById("kg").value);
-      const prod = productos[opcion - 1];
+      const prod = productos.find(p => p.codigo === opcion);
 
       if (kg > 0) {
         if (kg <= prod.stock) {
@@ -186,6 +225,5 @@
       document.getElementById("boleta").innerHTML = resultado;
     }
   </script>
-
 </body>
 </html>
