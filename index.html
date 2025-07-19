@@ -91,10 +91,14 @@ function mostrarProductos() {
       precio.textContent = `Precio: S/ ${p.precio.toFixed(2)} por kg | Stock: ${p.stock} kg`;
     } else {
       // Producto de ropa con tallas
-      const precios = Object.entries(p.precio)
-        .map(([talla, precio]) => `${talla}: S/ ${precio}`)
-        .join(" | ");
-      precio.textContent = precios;
+      const valores = Object.values(p.precio);
+      const todosIguales = valores.every(v => v === valores[0]);
+      const menor = Math.min(...valores);
+      const mayor = Math.max(...valores);
+
+      precio.innerHTML = todosIguales
+        ? `<span style="color: #555;">S/ ${menor}</span>`
+        : `<span style="color: #555;">S/ ${menor} - S/ ${mayor}</span>`;
     }
 
     divInformacion.appendChild(nombre);
@@ -106,6 +110,10 @@ function mostrarProductos() {
 
     // Agregar card de productos al contenedor principal
     divProductos.appendChild(productCard);
+    productCard.addEventListener('click', () => {
+  localStorage.setItem('productos', JSON.stringify(productos));
+  window.location.href = `products.html?codigo=${p.codigo}`;
+});
   });
 }
 

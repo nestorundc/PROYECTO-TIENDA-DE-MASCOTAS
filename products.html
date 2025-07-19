@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle del Producto</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .detalle-producto {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+    }
+
+    .detalle-producto img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+      margin-bottom: 20px;
+    }
+
+    .detalle-producto h2 {
+      margin-bottom: 10px;
+    }
+
+    .detalle-producto ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .detalle-producto ul li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="detalle-producto" id="detalleProducto">
+    <h2>Cargando producto...</h2>
+  </div>
+
+  <script>
+    const productos = JSON.parse(localStorage.getItem('productos')) || [];
+    const codigo = parseInt(new URLSearchParams(window.location.search).get('codigo'));
+    const producto = productos.find(p => p.codigo === codigo);
+
+    const contenedor = document.getElementById('detalleProducto');
+
+    if (!producto) {
+      contenedor.innerHTML = '<h2>Producto no encontrado.</h2>';
+    } else {
+      let html = `
+        <h2>${producto.nombre}</h2>
+        <img src="${producto.img}" alt="${producto.nombre}">
+        <ul>
+      `;
+
+      if (typeof producto.precio === 'number') {
+        html += `
+          <li><strong>Precio:</strong> S/ ${producto.precio.toFixed(2)} por kg</li>
+          <li><strong>Stock disponible:</strong> ${producto.stock} kg</li>
+        `;
+      } else {
+        html += '<li><strong>Precios por talla:</strong><ul>';
+        for (let talla in producto.precio) {
+          html += `<li>${talla}: S/ ${producto.precio[talla]} (Stock: ${producto.stock[talla]})</li>`;
+        }
+        html += '</ul></li>';
+      }
+
+      html += '</ul>';
+      html += '<button style="margin-top: 15px; padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Agregar al carrito</button>';
+      html += '<button onclick="window.history.back()" style="margin-top: 20px; margin-left: 10px; padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">Volver</button>';
+      contenedor.innerHTML = html;
+    }
+  </script>
+</body>
+</html>
