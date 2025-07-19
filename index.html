@@ -60,42 +60,55 @@
     let total = 0;
 
 
-    function mostrarProductos() {
-      const divProductos = document.getElementById('productos');
-      divProductos.innerHTML = '';
-      
-      productos.forEach(p => {
-        const productCard = document.createElement('div');
-        productCard.classList.add('productCard');
+function mostrarProductos() {
+  const divProductos = document.getElementById('productos');
+  divProductos.innerHTML = '';
+  
+  productos.forEach(p => {
+    const productCard = document.createElement('div');
+    productCard.classList.add('productCard');
 
+    // Div para imagen del producto
+    const divImg = document.createElement('div');
+    divImg.classList.add('divImg');
+    const img = document.createElement('img');
+    img.src = p.img;
+    img.alt = p.nombre;
+    divImg.appendChild(img);
 
-        // Div para imagen del producto
-        const divImg = document.createElement('div');
-        divImg.classList.add('divImg');
-        const img = document.createElement('img');
-        img.src = p.img 
-        img.alt = p.nombre;
-        divImg.appendChild(img);
+    // Div para información del producto
+    const divInformacion = document.createElement('div');
+    divInformacion.classList.add('divInformacion');
+    
+    const nombre = document.createElement('h3');
+    nombre.textContent = p.nombre;
+    
+    const precio = document.createElement('h4');
 
-        // Div para información del producto
-        const divInformacion = document.createElement('div');
-        divInformacion.classList.add('divInformacion');
-        const nombre = document.createElement('h3');
-        nombre.textContent = p.nombre;
-        const precio = document.createElement('h4');
-        const precios = Object.entries(p.precio).map(([talla, precio]) => `${talla}: S/ ${precio}`).join(" | ");
-        precio.textContent = precios;
-        divInformacion.appendChild(nombre);
-        divInformacion.appendChild(precio);
-
-        // Agregar ambos divs a la card del producto
-        productCard.appendChild(divImg);
-        productCard.appendChild(divInformacion);
-
-        // Agregar card de productos al contenedor principal
-        divProductos.appendChild(productCard);
-      });
+    // Detectar si es producto de comida o ropa
+    if (typeof p.precio === 'number') {
+      // Producto de comida
+      precio.textContent = `Precio: S/ ${p.precio.toFixed(2)} por kg | Stock: ${p.stock} kg`;
+    } else {
+      // Producto de ropa con tallas
+      const precios = Object.entries(p.precio)
+        .map(([talla, precio]) => `${talla}: S/ ${precio}`)
+        .join(" | ");
+      precio.textContent = precios;
     }
+
+    divInformacion.appendChild(nombre);
+    divInformacion.appendChild(precio);
+
+    // Agregar ambos divs a la card del producto
+    productCard.appendChild(divImg);
+    productCard.appendChild(divInformacion);
+
+    // Agregar card de productos al contenedor principal
+    divProductos.appendChild(productCard);
+  });
+}
+
 
     mostrarProductos();
     function llenarOpciones() {
@@ -119,19 +132,23 @@ llenarOpciones();
 
   function seleccionarProducto() {
     const seleccion = parseInt(document.getElementById("opcion").value);
-    const producto = productos[seleccion];
+    const producto = productos.find(p => p.codigo === seleccion);
     const inputExtra = document.getElementById("inputExtra");
     inputExtra.innerHTML = "";
 
-    if (!producto) return;
+    if (!producto) {
+      if (seleccion === 999) {
+        mostrarBoleta();
+      }
+      return;
+    }
 
-    if (!producto.precioKg && !producto.precio) return;
-
-    if (producto.precioKg) {
+    if (typeof producto.precio === 'number') {
       inputExtra.innerHTML = `
+        <h4>${producto.nombre}</h4>
         <label>Cantidad en kilogramos: </label>
-        <input type="number" id="cantidadKg" min="0.1" step="0.1">
-        <button onclick="comprarComida(${seleccion})">Comprar</button>
+        <input type="number" id="kg" min="0.1" step="0.1" placeholder="Disponible: ${producto.stock} kg">
+        <button onclick="agregarComida(${producto.codigo})">Comprar</button>
       `;
     } else {
 
@@ -140,11 +157,11 @@ llenarOpciones();
         html += `
           <div>
             <label>${talla} (S/.${producto.precio[talla]}): </label>
-            <input type="number" id="cant_${talla}" min="0" max="${producto.stock[talla]}" placeholder="0 (stock: ${producto.stock[talla]})">
+            <input type="number" id="cant${talla}" min="0" max="${producto.stock[talla]}" placeholder="0 (stock: ${producto.stock[talla]})">
           </div>
         `;
       }
-      html += `<button onclick="comprarRopa(${seleccion})">Comprar</button>`;
+      html += `<button onclick="agregarPrendaPorTallas(${producto.codigo})">Comprar</button>`;
       inputExtra.innerHTML = html;
     }
   }
@@ -190,26 +207,27 @@ llenarOpciones();
       mostrarProductos();
     }
 
-    function agregarComida(opcion) {
-      const kg = parseFloat(document.getElementById("kg").value);
-      const prod = productos.find(p => p.codigo === opcion);
+  function agregarComida(opcion) {
+    const kg = parseFloat(document.getElementById("kg").value);
+    const prod = productos.find(p => p.codigo === opcion);
 
-      if (kg > 0) {
-        if (kg <= prod.stock) {
-          const subtotal = kg * prod.precio;
-          total += subtotal;
-          prod.stock -= kg;
-          boleta.push(`${kg} kg ${prod.nombre} : S/ ${subtotal.toFixed(2)}`);
-          alert("Producto agregado a la boleta.");
-          document.getElementById("inputExtra").innerHTML = "";
-          mostrarProductos();
-        } else {
-          alert(`Stock insuficiente. Solo quedan ${prod.stock} kg disponibles.`);
-        }
+    if (kg > 0) {
+      if (kg <= prod.stock) {
+        const subtotal = kg * prod.precio;
+        total += subtotal;
+        prod.stock -= kg;
+        boleta.push(`${kg} kg ${prod.nombre} : S/ ${subtotal.toFixed(2)}`);
+        alert("Producto agregado a la boleta.");
+        document.getElementById("inputExtra").innerHTML = "";
+        mostrarProductos();
       } else {
-        alert("Ingrese una cantidad válida.");
+        alert(`Stock insuficiente. Solo quedan ${prod.stock} kg disponibles.`);
       }
+    } else {
+      alert("Ingrese una cantidad válida.");
     }
+  }
+
 
     function mostrarBoleta() {
       let resultado = "<h2>------ BOLETA DE VENTA ------</h2>";
