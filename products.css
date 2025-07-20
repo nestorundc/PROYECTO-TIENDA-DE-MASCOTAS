@@ -1,0 +1,27 @@
+.detalle-producto {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+.detalle-producto img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    margin-bottom: 20px;
+}
+
+.detalle-producto h2 {
+    margin-bottom: 10px;
+}
+
+.detalle-producto ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.detalle-producto ul li {
+    margin-bottom: 8px;
+}
