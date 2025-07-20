@@ -1,5 +1,5 @@
 const productos = [
-    { codigo: 1, nombre: "Abrigo Impermeable para perro", img: "imgs/p1.webp", precio: { S: 89, M: 99, L: 109, XL: 129 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
+    { codigo: 1, nombre: "Abrigo Impermeable para perro", img: "imgs/p1.webp", precio: { S: 89, M: 99, L: 109, XL: 129 }, stock: { S: 5, M: 5, L: 5, XL: 5 }, descripcion: "Mezcla un look retro para perritos amantes de los diseños divertidos."},
     { codigo: 2, nombre: "Chompa para perro Funky Retro", img: "imgs/p2.webp", precio: { S: 69, M: 74, L: 77, XL: 81 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
     { codigo: 3, nombre: "Chompa para perro Velero Rojo", img: "imgs/p3.webp", precio: { S: 69, M: 72, L: 74, XL: 77 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },
     { codigo: 4, nombre: "Chompa para perro Eco Trenza Plomo Azulado", img: "imgs/p4.webp", precio: { S: 65, M: 67, L: 68, XL: 69 }, stock: { S: 5, M: 5, L: 5, XL: 5 } },

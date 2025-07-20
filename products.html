@@ -1,50 +1,139 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalle del Producto</title>
   <link rel="stylesheet" href="products.css">
 </head>
+
 <body>
   <div class="detalle-producto" id="detalleProducto">
-    <h2>Cargando producto...</h2>
+    <div class="imagenProducto">
+    </div>
+    <div class="nombreProducto">
+    </div>
+    <div class="detalleProducto"></div>
   </div>
-
+  <script src="productos.js"></script>
   <script>
-    const productos = JSON.parse(localStorage.getItem('productos')) || [];
-    const codigo = parseInt(new URLSearchParams(window.location.search).get('codigo'));
-    const producto = productos.find(p => p.codigo === codigo);
+    const codigoProductoSelecionado = parseInt(new URLSearchParams(window.location.search).get('codigo'));
+    const producto = productos.find(p => p.codigo === codigoProductoSelecionado);
 
     const contenedor = document.getElementById('detalleProducto');
+    const imagenProducto = document.querySelector('.imagenProducto');
+    const nombreProducto = document.querySelector('.nombreProducto');
+    const detalleProducto = document.querySelector('.detalleProducto');
 
-    if (!producto) {
-      contenedor.innerHTML = '<h2>Producto no encontrado.</h2>';
+    // Insertar imagen del producto
+    const img = document.createElement('img');
+    img.src = producto.img
+    img.alt = producto.nombre
+    imagenProducto.appendChild(img);
+
+    const nombre = document.createElement('h3');
+    nombre.textContent = producto.nombre;
+    nombreProducto.appendChild(nombre);
+
+    if (typeof producto.precio === 'number') {
+      const precio = document.createElement('p');
+      precio.textContent = `Precio: S/ ${producto.precio}`;
+      detalleProducto.appendChild(precio);
+      const stock = document.createElement('p');
+      stock.textContent = `Stock: ${producto.stock}`;
+      detalleProducto.appendChild(stock);
     } else {
-      let html = `
-        <h2>${producto.nombre}</h2>
-        <img src="${producto.img}" alt="${producto.nombre}">
-        <ul>
-      `;
+      const label = document.createElement('label');
+      label.textContent = "Selecciona una talla:";
+      label.setAttribute("for", "selectTalla");
+      detalleProducto.appendChild(label);
 
-      if (typeof producto.precio === 'number') {
-        html += `
-          <li><strong>Precio:</strong> S/ ${producto.precio.toFixed(2)} por kg</li>
-          <li><strong>Stock disponible:</strong> ${producto.stock} kg</li>
-        `;
-      } else {
-        html += '<li><strong>Precios por talla:</strong><ul>';
-        for (let talla in producto.precio) {
-          html += `<li>${talla}: S/ ${producto.precio[talla]} (Stock: ${producto.stock[talla]})</li>`;
-        }
-        html += '</ul></li>';
+      const select = document.createElement('select');
+      select.id = "selectTalla";
+      select.style.marginLeft = "10px";
+
+      for (let talla in producto.precio) {
+        const option = document.createElement('option');
+        option.value = talla;
+        option.textContent = talla;
+        select.appendChild(option);
       }
 
-      html += '</ul>';
-      html += '<button style="margin-top: 15px; padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Agregar al carrito</button>';
-      html += '<button onclick="window.history.back()" style="margin-top: 20px; margin-left: 10px; padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 5px; cursor: pointer;">Volver</button>';
-      contenedor.innerHTML = html;
+      detalleProducto.appendChild(select);
+
+      const precioTalla = document.createElement('p');
+      const stockTalla = document.createElement('p');
+      detalleProducto.appendChild(precioTalla);
+      detalleProducto.appendChild(stockTalla);
+
+      // Actualizar cuando el usuario cambia de talla
+      select.addEventListener('change', () => {
+        const tallaSeleccionada = select.value;
+        precioTalla.textContent = `Precio: S/ ${producto.precio[tallaSeleccionada]}`;
+        stockTalla.textContent = `Stock: ${producto.stock[tallaSeleccionada]} unidades`;
+      });
+
+      // Mostrar valores por defecto (primera opción)
+      select.dispatchEvent(new Event('change'));
     }
+    // Crear input para cantidad
+    const labelCantidad = document.createElement('label');
+    labelCantidad.textContent = "Cantidad:";
+    labelCantidad.setAttribute("for", "inputCantidad");
+    detalleProducto.appendChild(labelCantidad);
+
+    const inputCantidad = document.createElement('input');
+    inputCantidad.type = 'number';
+    inputCantidad.id = 'inputCantidad';
+    inputCantidad.min = 1;
+    inputCantidad.value = 1;
+    inputCantidad.style.marginLeft = "10px";
+    detalleProducto.appendChild(inputCantidad);
+
+    const botonCarrito = document.createElement('button');
+    botonCarrito.textContent = "Añadir al carrito";
+    botonCarrito.classList.add('botonCarrito');
+    detalleProducto.appendChild(botonCarrito);
+
+    botonCarrito.addEventListener('click', () => {
+      // Obtener talla seleccionada si aplica
+      let tallaSeleccionada = null;
+      if (typeof producto.precio !== 'number') {
+        tallaSeleccionada = document.getElementById('selectTalla').value;
+      }
+
+      // Leer cantidad, asegurarse que sea al menos 1
+      const cantidadSeleccionada = Math.max(1, parseInt(document.getElementById('inputCantidad').value) || 1);
+
+      // Crear objeto producto para el carrito
+      const productoCarrito = {
+        codigo: producto.codigo,
+        nombre: producto.nombre,
+        img: producto.img,
+        talla: tallaSeleccionada,
+        precio: (typeof producto.precio === 'number') ? producto.precio : producto.precio[tallaSeleccionada],
+        cantidad: cantidadSeleccionada
+      };
+
+      // Obtener carrito de localStorage o crear uno nuevo
+      let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+      // Verificar si el producto (y talla) ya están en el carrito para sumar cantidad
+      const index = carrito.findIndex(item => item.codigo === productoCarrito.codigo && item.talla === productoCarrito.talla);
+
+      if (index !== -1) {
+        carrito[index].cantidad += cantidadSeleccionada; // sumar la cantidad elegida
+      } else {
+        carrito.push(productoCarrito); // agrega nuevo producto
+      }
+
+      // Guardar carrito actualizado en localStorage
+      localStorage.setItem('carrito', JSON.stringify(carrito));
+
+      alert('Producto agregado al carrito');
+    })
   </script>
 </body>
+
 </html>
