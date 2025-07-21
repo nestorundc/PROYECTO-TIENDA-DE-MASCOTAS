@@ -12,9 +12,10 @@
   <div class="detalle-producto" id="detalleProducto">
     <div class="imagenProducto">
     </div>
-    <div class="nombreProducto">
+    <div class="infoProducto">
+      <div class="nombreProducto"></div>
+      <div class="detalleProducto"></div>
     </div>
-    <div class="detalleProducto"></div>
   </div>
   <script src="productos.js"></script>
   <script>
@@ -38,7 +39,7 @@
 
     if (typeof producto.precio === 'number') {
       const precio = document.createElement('p');
-      precio.textContent = `Precio: S/ ${producto.precio}`;
+      precio.textContent = `Precioo: S/ ${producto.precio}`;
       detalleProducto.appendChild(precio);
       const stock = document.createElement('p');
       stock.textContent = `Stock: ${producto.stock}`;
@@ -70,8 +71,8 @@
       // Actualizar cuando el usuario cambia de talla
       select.addEventListener('change', () => {
         const tallaSeleccionada = select.value;
-        precioTalla.textContent = `Precio: S/ ${producto.precio[tallaSeleccionada]}`;
-        stockTalla.textContent = `Stock: ${producto.stock[tallaSeleccionada]} unidades`;
+        precioTalla.textContent = `S/ ${producto.precio[tallaSeleccionada]}`;
+        stockTalla.textContent = `Stock disponible: ${producto.stock[tallaSeleccionada]} unidades`;
       });
 
       // Mostrar valores por defecto (primera opción)
@@ -135,5 +136,4 @@
     })
   </script>
 </body>
-
 </html>
