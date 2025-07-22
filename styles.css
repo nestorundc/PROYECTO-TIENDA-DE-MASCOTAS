@@ -9,12 +9,6 @@ body {
     background: #f2f2f2;
 }
 
-.logo {
-    width: 200px;
-    display: block;
-    margin: 25px auto;
-}
-
 #productos {
     display: grid;
     grid-template-columns: 1fr;
@@ -55,23 +49,16 @@ body {
     margin-top: 10px;
 }
 
-#boleta {
-    background: #fff;
-    border: 1px solid #ccc;
-    padding: 15px;
-    margin-top: 20px;
-}
-
-select,
-input,
-button {
-    margin-top: 5px;
-    margin-bottom: 10px;
-}
 
 @media screen and (min-width: 768px) {
     #productos {
         grid-template-columns: repeat(2, 1fr);
+    }
+    .logo {
+        margin-right: 0;
+    }
+    .carritoContainer {
+        margin-right: 25px;
     }
 }
 
@@ -79,11 +66,17 @@ button {
     #productos {
         grid-template-columns: repeat(3, 1fr);
     }
+    .carritoContainer {
+        margin-right: 90px;
+    }
 }
 
 @media screen and (min-width: 1440px) {
     #productos {
         grid-template-columns: repeat(4, 1fr);
         max-width: 1300px;
+    }
+    .carritoContainer {
+        margin-right: 120px;
     }
 }

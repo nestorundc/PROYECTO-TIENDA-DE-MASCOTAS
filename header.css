@@ -1,0 +1,53 @@
+header {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    margin: 20px auto
+}
+
+.logoContainer {
+    text-align: center;
+}
+
+.logo {
+    width: 200px;
+    display: block;
+    margin: 0 auto;
+    margin-right: 40px;
+}
+
+.carritoContainer {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.iconoCarrito {
+    width: 50px;
+    cursor: pointer;
+}
+
+
+@media screen and (min-width: 768px) {
+    .logo {
+        margin-right: 0;
+    }
+    .carritoContainer {
+        margin-right: 25px;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .carritoContainer {
+        margin-right: 90px;
+    }
+}
+
+@media screen and (min-width: 1440px) {
+    .carritoContainer {
+        margin-right: 120px;
+    }
+}
