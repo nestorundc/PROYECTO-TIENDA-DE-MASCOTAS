@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carrito de Compras - HOTDOGZ</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="header.css" />
+  <style>
+    .carritoItems {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+
+    .carritoItem {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+
+    .carritoItem img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      margin-right: 20px;
+    }
+
+    .info {
+      flex: 1;
+    }
+
+    .acciones {
+      text-align: right;
+    }
+
+    .acciones button {
+      background-color: red;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .total {
+      font-weight: bold;
+      font-size: 20px;
+      text-align: right;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="header-container"></div>
+  <div class="carritoItems" id="carritoItems"></div>
+  <script src="productos.js"></script>
+  <script>
+    async function cargarHeader() {
+      try {
+        const respuesta = await fetch('header.html');
+        if (!respuesta.ok) throw new Error(`Error al cargar header: ${respuesta.status}`);
+        const html = await respuesta.text();
+        document.getElementById('header-container').innerHTML = html;
+      } catch (error) {
+        console.error('No se pudo cargar el header:', error);
+      }
+    }
+
+    cargarHeader();
+
+    function mostrarCarrito() {
+      const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+      const contenedor = document.getElementById('carritoItems');
+      contenedor.innerHTML = '';
+
+      if (carrito.length === 0) {
+        contenedor.innerHTML = '<p style="text-align:center;">Tu carrito está vacío.</p>';
+        return;
+      }
+
+      let total = 0;
+
+      carrito.forEach((producto, index) => {
+        const item = document.createElement('div');
+        item.className = 'carritoItem';
+
+        const imagen = document.createElement('img');
+        imagen.src = producto.img;
+
+        const info = document.createElement('div');
+        info.className = 'info';
+        info.innerHTML = `
+          <h4>${producto.nombre}</h4>
+          ${producto.talla ? `<p>Talla: ${producto.talla}</p>` : ''}
+          <p>Precio unitario: S/ ${producto.precio}</p>
+          <p>Cantidad: ${producto.cantidad}</p>
+        `;
+
+        const acciones = document.createElement('div');
+        acciones.className = 'acciones';
+
+        const subtotal = producto.precio * producto.cantidad;
+        total += subtotal;
+
+        const eliminar = document.createElement('button');
+        eliminar.textContent = 'Eliminar';
+        eliminar.addEventListener('click', () => {
+
+          carrito.splice(index, 1);
+          localStorage.setItem('carrito', JSON.stringify(carrito));
+          mostrarCarrito();
+        });
+
+        acciones.appendChild(document.createTextNode(`Subtotal: S/ ${subtotal}`));
+        acciones.appendChild(document.createElement('br'));
+        acciones.appendChild(eliminar);
+
+        item.appendChild(imagen);
+        item.appendChild(info);
+        item.appendChild(acciones);
+
+        contenedor.appendChild(item);
+      });
+
+      const totalDiv = document.createElement('div');
+      totalDiv.className = 'total';
+      totalDiv.textContent = `Total: S/ ${total}`;
+      contenedor.appendChild(totalDiv);
+    }
+
+    mostrarCarrito();
+  </script>
+</body>
+</html>

@@ -36,7 +36,9 @@
 
     cargarHeader();
     const codigoProductoSelecionado = parseInt(new URLSearchParams(window.location.search).get('codigo'));
-    const producto = productos.find(p => p.codigo === codigoProductoSelecionado);
+    
+    let productosStock = JSON.parse(localStorage.getItem('productosStock')) || productos;
+    const producto = productosStock.find(p => p.codigo === codigoProductoSelecionado);
 
     const contenedor = document.getElementById('detalleProducto');
     const imagenProducto = document.querySelector('.imagenProducto');
@@ -147,7 +149,7 @@
 
       // Guardar carrito actualizado en localStorage
       localStorage.setItem('carrito', JSON.stringify(carrito));
-
+      
       alert('Producto agregado al carrito');
     })
   </script>
