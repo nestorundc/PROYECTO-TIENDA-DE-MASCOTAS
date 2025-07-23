@@ -45,7 +45,6 @@
     const nombreProducto = document.querySelector('.nombreProducto');
     const detalleProducto = document.querySelector('.detalleProducto');
 
-    // Insertar imagen del producto
     const img = document.createElement('img');
     img.src = producto.img
     img.alt = producto.nombre
@@ -86,17 +85,14 @@
       detalleProducto.appendChild(precioTalla);
       detalleProducto.appendChild(stockTalla);
 
-      // Actualizar cuando el usuario cambia de talla
       select.addEventListener('change', () => {
         const tallaSeleccionada = select.value;
         precioTalla.textContent = `S/ ${producto.precio[tallaSeleccionada]}`;
         stockTalla.textContent = `Stock disponible: ${producto.stock[tallaSeleccionada]} unidades`;
       });
 
-      // Mostrar valores por defecto (primera opción)
       select.dispatchEvent(new Event('change'));
     }
-    // Crear input para cantidad
     const labelCantidad = document.createElement('label');
     labelCantidad.textContent = "Cantidad:";
     labelCantidad.setAttribute("for", "inputCantidad");
@@ -116,16 +112,29 @@
     detalleProducto.appendChild(botonCarrito);
 
     botonCarrito.addEventListener('click', () => {
-      // Obtener talla seleccionada si aplica
-      let tallaSeleccionada = null;
-      if (typeof producto.precio !== 'number') {
-        tallaSeleccionada = document.getElementById('selectTalla').value;
-      }
-
-      // Leer cantidad, asegurarse que sea al menos 1
+      const tallaSeleccionada = (typeof producto.precio !== 'number') ? document.getElementById('selectTalla').value : null;
       const cantidadSeleccionada = Math.max(1, parseInt(document.getElementById('inputCantidad').value) || 1);
 
-      // Crear objeto producto para el carrito
+      if (typeof producto.stock === 'object' && tallaSeleccionada) {
+        if (producto.stock[tallaSeleccionada] < cantidadSeleccionada) {
+          alert(`Solo hay ${producto.stock[tallaSeleccionada]} unidades disponibles para la talla ${tallaSeleccionada}.`);
+          return;
+        }
+      } else if (typeof producto.stock === 'number') {
+        if (producto.stock < cantidadSeleccionada) {
+          alert(`Solo hay ${producto.stock} unidades disponibles.`);
+          return;
+        }
+      }
+
+      if (typeof producto.stock === 'object' && tallaSeleccionada) {
+        producto.stock[tallaSeleccionada] -= cantidadSeleccionada;
+      } else if (typeof producto.stock === 'number') {
+        producto.stock -= cantidadSeleccionada;
+      }
+
+      localStorage.setItem('productosStock', JSON.stringify(productosStock));
+
       const productoCarrito = {
         codigo: producto.codigo,
         nombre: producto.nombre,
@@ -135,23 +144,21 @@
         cantidad: cantidadSeleccionada
       };
 
-      // Obtener carrito de localStorage o crear uno nuevo
       let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
-      // Verificar si el producto (y talla) ya están en el carrito para sumar cantidad
       const index = carrito.findIndex(item => item.codigo === productoCarrito.codigo && item.talla === productoCarrito.talla);
-
       if (index !== -1) {
-        carrito[index].cantidad += cantidadSeleccionada; // sumar la cantidad elegida
+        carrito[index].cantidad += cantidadSeleccionada;
       } else {
-        carrito.push(productoCarrito); // agrega nuevo producto
+        carrito.push(productoCarrito);
       }
 
-      // Guardar carrito actualizado en localStorage
       localStorage.setItem('carrito', JSON.stringify(carrito));
-      
+
       alert('Producto agregado al carrito');
-    })
+      window.location.reload();
+    });
+
   </script>
 </body>
 

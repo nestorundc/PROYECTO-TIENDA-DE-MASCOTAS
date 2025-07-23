@@ -113,11 +113,23 @@
         const eliminar = document.createElement('button');
         eliminar.textContent = 'Eliminar';
         eliminar.addEventListener('click', () => {
+        let productosStock = JSON.parse(localStorage.getItem('productosStock')) || productos;
+        const productoOriginal = productosStock.find(p => p.codigo === producto.codigo);
 
-          carrito.splice(index, 1);
-          localStorage.setItem('carrito', JSON.stringify(carrito));
-          mostrarCarrito();
+        if (productoOriginal) {
+            if (typeof productoOriginal.stock === 'object' && producto.talla) {
+            productoOriginal.stock[producto.talla] += producto.cantidad;
+            } else if (typeof productoOriginal.stock === 'number') {
+            productoOriginal.stock += producto.cantidad;
+            }
+            localStorage.setItem('productosStock', JSON.stringify(productosStock));
+        }
+
+        carrito.splice(index, 1);
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+        mostrarCarrito();
         });
+
 
         acciones.appendChild(document.createTextNode(`Subtotal: S/ ${subtotal}`));
         acciones.appendChild(document.createElement('br'));
