@@ -63,6 +63,7 @@
   <div id="header-container"></div>
   <div class="carritoItems" id="carritoItems"></div>
   <script src="productos.js"></script>
+  <script src="script.js"></script>
   <script>
     async function cargarHeader() {
       try {
@@ -70,6 +71,10 @@
         if (!respuesta.ok) throw new Error(`Error al cargar header: ${respuesta.status}`);
         const html = await respuesta.text();
         document.getElementById('header-container').innerHTML = html;
+
+        requestAnimationFrame(() => {
+          actualizarContadorCarrito();
+        });
       } catch (error) {
         console.error('No se pudo cargar el header:', error);
       }
@@ -157,6 +162,15 @@
       });
       contenedor.appendChild(botonPagar);
 
+    }
+    function actualizarContadorCarrito() {
+      const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+      let totalCantidad = carrito.reduce((total, item) => total + item.cantidad, 0);
+
+      const contador = document.getElementById("contadorCarrito");
+      if (contador) {
+        contador.textContent = totalCantidad;
+      }
     }
 
     mostrarCarrito();

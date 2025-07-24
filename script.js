@@ -1,17 +1,28 @@
 async function cargarHeader() {
   try {
     const respuesta = await fetch('header.html');
-    if (!respuesta.ok) {
-      throw new Error(`Error al cargar header: ${respuesta.status}`);
-    }
+    if (!respuesta.ok) throw new Error(`Error al cargar header: ${respuesta.status}`);
     const html = await respuesta.text();
     document.getElementById('header-container').innerHTML = html;
   } catch (error) {
     console.error('No se pudo cargar el header:', error);
   }
 }
+document.addEventListener('DOMContentLoaded', async () => {
+  await cargarHeader();
+  actualizarContadorCarrito();
+  mostrarDetalleProducto();
+});
 
-cargarHeader();
+function actualizarContadorCarrito() {
+  const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+  let totalCantidad = carrito.reduce((total, item) => total + item.cantidad, 0);
+
+  const contador = document.getElementById("contadorCarrito");
+  if (contador) {
+    contador.textContent = totalCantidad;
+  }
+}
 
 function mostrarProductos() {
   const divProductos = document.getElementById('productos');
@@ -21,7 +32,6 @@ function mostrarProductos() {
     const productCard = document.createElement('div');
     productCard.classList.add('productCard');
 
-    // Div para imagen del producto
     const divImg = document.createElement('div');
     divImg.classList.add('divImg');
     const img = document.createElement('img');
@@ -29,7 +39,6 @@ function mostrarProductos() {
     img.alt = p.nombre;
     divImg.appendChild(img);
 
-    // Div para información del producto
     const divInformacion = document.createElement('div');
     divInformacion.classList.add('divInformacion');
 
@@ -38,13 +47,9 @@ function mostrarProductos() {
 
     const precio = document.createElement('h4');
 
-    // Detectar si es producto de comida o ropa
     if (typeof p.precio === 'number') {
-      // Producto de comida
       precio.textContent = `S/ ${p.precio.toFixed(2)} por kg`;
     } else {
-
-      // Producto de ropa con tallas
       const valores = Object.values(p.precio);
       const todosIguales = valores.every(v => v === valores[0]);
       const menor = Math.min(...valores);
@@ -58,16 +63,14 @@ function mostrarProductos() {
     divInformacion.appendChild(nombre);
     divInformacion.appendChild(precio);
 
-    // Agregar ambos divs a la card del producto
     productCard.appendChild(divImg);
     productCard.appendChild(divInformacion);
 
-    // Agregar card de productos al contenedor principal
     divProductos.appendChild(productCard);
+
     productCard.addEventListener('click', () => {
       window.location.href = `products.html?codigo=${p.codigo}`;
     });
   });
 }
-
 mostrarProductos();
