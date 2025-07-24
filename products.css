@@ -20,9 +20,12 @@
 }
 
 .nombreProducto {
-    font-size: 22px;
-    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
     margin-bottom: 20px;
+    color: #333;
+    letter-spacing: 0.5px;
 }
 
 .detalleProducto p:first-of-type {
@@ -56,6 +59,13 @@
     padding: 5px 10px;
     margin: 20px 0;
 }
+.descripcionProducto {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
 
 .botonCarrito {
     display: block;
@@ -67,7 +77,34 @@
     border-radius: 10px;
     font-weight: bold;
     cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.5px;
 }
+.labelTalla {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #444;
+    display: block;
+    margin: 15px 0 5px;
+}
+.precioTalla {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    color: #e53935;
+    font-weight: 600;
+    margin-top: 15px;
+    text-align: center;
+}
+
+.stockTalla {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #2e7d32;
+    margin-top: 5px;
+    text-align: center;
+}
+
 
 @media screen and (max-width: 768px) {
     .detalleProducto p:nth-of-type(2) {

@@ -7,6 +7,7 @@
   <title>Detalle del Producto</title>
   <link rel="stylesheet" href="products.css">
   <link rel="stylesheet" href="header.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -70,6 +71,7 @@
       const label = document.createElement('label');
       label.textContent = "Selecciona una talla:";
       label.setAttribute("for", "selectTalla");
+      label.classList.add('labelTalla');
       detalleProducto.appendChild(label);
 
       const select = document.createElement('select');
@@ -91,6 +93,8 @@
       detalleProducto.appendChild(stockTalla);
 
       select.addEventListener('change', () => {
+        precioTalla.classList.add('precioTalla');
+        stockTalla.classList.add('stockTalla');
         const tallaSeleccionada = select.value;
         precioTalla.textContent = `S/ ${producto.precio[tallaSeleccionada]}`;
         stockTalla.textContent = `Stock disponible: ${producto.stock[tallaSeleccionada]} unidades`;
