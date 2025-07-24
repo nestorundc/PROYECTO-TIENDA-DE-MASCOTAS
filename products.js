@@ -46,6 +46,7 @@ if (typeof producto.precio === 'number') {
     const label = document.createElement('label');
     label.textContent = "Selecciona una talla:";
     label.setAttribute("for", "selectTalla");
+    label.classList.add('labelTalla');
     detalleProducto.appendChild(label);
 
     const select = document.createElement('select');
@@ -67,6 +68,8 @@ if (typeof producto.precio === 'number') {
     detalleProducto.appendChild(stockTalla);
 
     select.addEventListener('change', () => {
+        precioTalla.classList.add('precioTalla');
+        stockTalla.classList.add('stockTalla');
         const tallaSeleccionada = select.value;
         precioTalla.textContent = `S/ ${producto.precio[tallaSeleccionada]}`;
         stockTalla.textContent = `Stock disponible: ${producto.stock[tallaSeleccionada]} unidades`;
@@ -74,8 +77,10 @@ if (typeof producto.precio === 'number') {
 
     select.dispatchEvent(new Event('change'));
 }
+
 const labelCantidad = document.createElement('label');
 labelCantidad.textContent = "Cantidad:";
+labelCantidad.classList.add('labelCantidad');
 labelCantidad.setAttribute("for", "inputCantidad");
 detalleProducto.appendChild(labelCantidad);
 
