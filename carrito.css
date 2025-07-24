@@ -1,0 +1,69 @@
+.carritoItems {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.carritoItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.carritoItem img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-right: 20px;
+}
+
+.info {
+    flex: 1;
+}
+
+.acciones {
+    text-align: right;
+}
+
+.acciones button {
+    background-color: red;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.total {
+    font-weight: bold;
+    font-size: 20px;
+    text-align: right;
+    margin-top: 20px;
+}
+
+@media screen and (max-width: 426px) {
+    .carritoItem {
+        flex-direction: column;
+    }
+    .carritoItem img {
+        width: 150px;
+        height: auto;
+        margin-bottom: 10px;
+    }
+    .carritoItem p:nth-of-type(3) {
+        margin-bottom: 20px;
+    }
+    .carritoItem button {
+        padding: 10px 15px;
+        font-size: 16px;
+    }
+
+
+}

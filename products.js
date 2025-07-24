@@ -19,7 +19,7 @@ async function cargarHeader() {
             childList: true,
             subtree: true
         });
-
+        
     } catch (error) {
         console.error('No se pudo cargar el header:', error);
     }
