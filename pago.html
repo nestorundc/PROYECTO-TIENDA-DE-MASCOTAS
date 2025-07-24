@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pago - HOTDOGZ</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="header.css" />
+  <style>
+    .contenedorPago {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .contenedorPago h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .formulario label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+
+    .formulario input, .formulario select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+    }
+
+    .metodoPago {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+
+    .botonPagar {
+      width: 100%;
+      background: green;
+      color: white;
+      font-weight: bold;
+      padding: 15px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .mensajeFinal {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 30px;
+      color: #0a0;
+    }
+
+    img.qr {
+      width: 150px;
+      display: block;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="header-container"></div>
+  <div class="contenedorPago">
+    <h2>Finalizar Compra</h2>
+
+    <div class="formulario" id="formularioPago">
+      <label for="nombre">Nombre completo</label>
+      <input type="text" id="nombre" placeholder="Luis Alberto Quispe Ramírez">
+
+      <label for="direccion">Dirección de envío</label>
+      <input type="text" id="direccion" placeholder="Av. Dos de Mayo 734, San Vicente de Cañete, Lima, Perú">
+
+      <label for="metodo">Método de pago</label>
+      <select id="metodo">
+        <option value="tarjeta">Tarjeta de crédito</option>
+        <option value="yape">Yape</option>
+      </select>
+
+      <div id="formTarjeta">
+        <label for="numeroTarjeta">Número de tarjeta</label>
+        <input type="text" id="numeroTarjeta" maxlength="19" value="4321 8765 1234 5678">
+
+        <label for="vencimiento">Fecha de vencimiento</label>
+        <input type="text" id="vencimiento" placeholder="MM/AA" value="12/29">
+
+        <label for="codigo">Código de seguridad</label>
+        <input type="text" id="codigo" maxlength="3" value="123">
+      </div>
+
+      <div id="formYape" style="display: none;">
+        <img src="imgs/qr-falso.png" alt="QR Yape" class="qr">
+        <p style="text-align: center;">Escanea este QR para simular un pago por Yape.</p>
+      </div>
+
+      <button class="botonPagar" id="btnPagar">Finalizar compra</button>
+    </div>
+
+    <div class="mensajeFinal" id="mensajeFinal" style="display: none;"></div>
+  </div>
+
+  <script>
+    async function cargarHeader() {
+      try {
+        const respuesta = await fetch('header.html');
+        if (!respuesta.ok) throw new Error('No se pudo cargar el header');
+        const html = await respuesta.text();
+        document.getElementById('header-container').innerHTML = html;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    cargarHeader();
+
+    const metodoSelect = document.getElementById('metodo');
+    const formTarjeta = document.getElementById('formTarjeta');
+    const formYape = document.getElementById('formYape');
+
+    metodoSelect.addEventListener('change', () => {
+      if (metodoSelect.value === 'tarjeta') {
+        formTarjeta.style.display = 'block';
+        formYape.style.display = 'none';
+      } else {
+        formTarjeta.style.display = 'none';
+        formYape.style.display = 'block';
+      }
+    });
+
+    document.getElementById('btnPagar').addEventListener('click', () => {
+      const nombre = document.getElementById('nombre').value.trim();
+      const direccion = document.getElementById('direccion').value.trim();
+
+      if (!nombre || !direccion) {
+        alert('Por favor, completa tus datos de envío.');
+        return;
+      }
+
+      const metodo = metodoSelect.value;
+      if (metodo === 'tarjeta') {
+        const num = document.getElementById('numeroTarjeta').value;
+        const venc = document.getElementById('vencimiento').value;
+        const codigo = document.getElementById('codigo').value;
+
+        if (!num || !venc || !codigo) {
+          alert('Completa los datos de la tarjeta.');
+          return;
+        }
+      }
+
+      localStorage.removeItem('carrito');
+
+      const mensaje = document.getElementById('mensajeFinal');
+      mensaje.innerHTML = `🎉 ¡Gracias por tu compra, <strong>${nombre}</strong>! Tu pedido llegará a <strong>${direccion}</strong> en las próximas <strong>24 horas</strong>. 🐾`;
+      mensaje.style.display = 'block';
+
+      document.getElementById('formularioPago').style.display = 'none';
+    });
+  </script>
+</body>
+</html>

@@ -146,6 +146,16 @@
       totalDiv.className = 'total';
       totalDiv.textContent = `Total: S/ ${total}`;
       contenedor.appendChild(totalDiv);
+
+      const botonPagar = document.createElement('button');
+      botonPagar.textContent = 'Proceder a pago';
+      botonPagar.className = 'botonCarrito';
+      botonPagar.style.marginTop = '20px';
+      botonPagar.addEventListener('click', () => {
+      window.location.href = 'pago.html';
+      });
+      contenedor.appendChild(botonPagar);
+
     }
 
     mostrarCarrito();
