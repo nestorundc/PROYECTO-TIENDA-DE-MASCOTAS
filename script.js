@@ -4,21 +4,13 @@ async function cargarHeader() {
     if (!respuesta.ok) throw new Error(`Error al cargar header: ${respuesta.status}`);
     const html = await respuesta.text();
     document.getElementById('header-container').innerHTML = html;
-
-    setTimeout(() => {
-      actualizarContadorCarrito();
-    }, 0);
-
   } catch (error) {
     console.error('No se pudo cargar el header:', error);
   }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  cargarHeader(() => {
-    actualizarContadorCarrito();
-  });
-
+document.addEventListener('DOMContentLoaded', async () => {
+  await cargarHeader();
+  actualizarContadorCarrito();
   mostrarDetalleProducto();
 });
 
@@ -40,7 +32,6 @@ function mostrarProductos() {
     const productCard = document.createElement('div');
     productCard.classList.add('productCard');
 
-
     const divImg = document.createElement('div');
     divImg.classList.add('divImg');
     const img = document.createElement('img');
@@ -59,7 +50,6 @@ function mostrarProductos() {
     if (typeof p.precio === 'number') {
       precio.textContent = `S/ ${p.precio.toFixed(2)} por kg`;
     } else {
-
       const valores = Object.values(p.precio);
       const todosIguales = valores.every(v => v === valores[0]);
       const menor = Math.min(...valores);
@@ -77,10 +67,10 @@ function mostrarProductos() {
     productCard.appendChild(divInformacion);
 
     divProductos.appendChild(productCard);
+
     productCard.addEventListener('click', () => {
       window.location.href = `products.html?codigo=${p.codigo}`;
     });
   });
 }
-
 mostrarProductos();

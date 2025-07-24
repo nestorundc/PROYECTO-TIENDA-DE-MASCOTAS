@@ -36,16 +36,16 @@ header {
 
 #contadorCarrito {
   position: absolute;
-  top: -6px;
-  right: -6px;
+  top: -5px;
+  right: -5px;
   background-color: red;
   color: white;
-  font-size: 13px;
-  padding: 3px 7px;
-  border-radius: 50%;
+  font-size: 12px;
   font-weight: bold;
-  display: inline-block;
-  z-index: 10;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-family: 'Poppins', sans-serif;
+  z-index: 1;
 }
 
 
