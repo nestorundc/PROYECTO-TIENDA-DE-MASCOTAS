@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
 .detalle-producto {
@@ -22,7 +23,6 @@
 .nombreProducto {
     font-size: 22px;
     font-weight: bold;
-    font-family: 'Poppins', sans-serif;
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 20px;
@@ -63,7 +63,6 @@
 }
 
 .descripcionProducto {
-    font-family: 'Poppins', sans-serif;
     font-size: 15px;
     color: #555;
     line-height: 1.6;
@@ -80,13 +79,10 @@
     border-radius: 10px;
     font-weight: bold;
     cursor: pointer;
-    font-family: 'Poppins', sans-serif;
     font-size: 16px;
     letter-spacing: 0.5px;
 }
 .labelCantidad {
-    display: block;
-    font-family: 'Poppins', sans-serif;
     font-size: 17px;
     color: #555; /* gris oscuro, más suave que el negro */
     margin-top: 15px;
@@ -94,14 +90,11 @@
 }
 
 .labelTalla {
-    font-family: 'Poppins', sans-serif;
     font-size: 16px;
     color: #444;
-    display: block;
     margin: 15px 0 5px;
 }
 .precioTalla {
-    font-family: 'Poppins', sans-serif;
     font-size: 20px;
     color: #e53935;
     font-weight: 600;
@@ -110,7 +103,6 @@
 }
 
 .stockTalla {
-    font-family: 'Poppins', sans-serif;
     font-size: 16px;
     color: #2e7d32;
     margin-top: 5px;
