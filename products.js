@@ -4,12 +4,27 @@ async function cargarHeader() {
         if (!respuesta.ok) {
             throw new Error(`Error al cargar header: ${respuesta.status}`);
         }
+
         const html = await respuesta.text();
         document.getElementById('header-container').innerHTML = html;
+
+        const observer = new MutationObserver((mutations, obs) => {
+            if (document.querySelector('#contadorCarrito')) {
+                actualizarContadorCarrito();
+                obs.disconnect();
+            }
+        });
+
+        observer.observe(document.getElementById('header-container'), {
+            childList: true,
+            subtree: true
+        });
+
     } catch (error) {
         console.error('No se pudo cargar el header:', error);
     }
 }
+
 
 cargarHeader();
 const codigoProductoSelecionado = parseInt(new URLSearchParams(window.location.search).get('codigo'));
@@ -99,7 +114,7 @@ const inputCantidad = document.createElement('input');
 inputCantidad.type = 'text';
 inputCantidad.id = 'inputCantidad';
 inputCantidad.value = 1;
-inputCantidad.readOnly = true; // Para que no puedan escribir directamente
+inputCantidad.readOnly = true;
 
 const botonMas = document.createElement('button');
 botonMas.textContent = '+';
@@ -190,7 +205,7 @@ botonCarrito.addEventListener('click', () => {
     }
 
     localStorage.setItem('carrito', JSON.stringify(carrito));
-
+    actualizarContadorCarrito();
     Swal.fire({
         icon: 'success',
         title: '¡Agregado al carrito!',
@@ -201,3 +216,11 @@ botonCarrito.addEventListener('click', () => {
         window.location.reload();
     });
 });
+document.addEventListener('DOMContentLoaded', () => {
+  cargarHeader(() => {
+    actualizarContadorCarrito();
+  });
+
+});
+
+

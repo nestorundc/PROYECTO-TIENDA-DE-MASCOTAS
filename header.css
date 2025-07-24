@@ -29,6 +29,25 @@ header {
     width: 50px;
     cursor: pointer;
 }
+.carritoLink {
+  position: relative;
+  display: inline-block;
+}
+
+#contadorCarrito {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: red;
+  color: white;
+  font-size: 13px;
+  padding: 3px 7px;
+  border-radius: 50%;
+  font-weight: bold;
+  display: inline-block;
+  z-index: 10;
+}
+
 
 
 @media screen and (min-width: 768px) {
