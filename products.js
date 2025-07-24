@@ -43,7 +43,7 @@ if (typeof producto.precio === 'number') {
 
     const stock = document.createElement('p');
     stock.classList.add('stockProducto');
-    stock.textContent = `Stock: ${producto.stock}`;
+    stock.textContent = `Stock disponible: ${producto.stock} kg`;
     detalleProducto.appendChild(stock);
 
 } else {
