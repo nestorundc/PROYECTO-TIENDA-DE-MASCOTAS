@@ -54,9 +54,13 @@
     nombre.textContent = producto.nombre;
     nombreProducto.appendChild(nombre);
 
+    const descripcion = document.createElement('p');
+    descripcion.textContent = producto.descripcion;
+    detalleProducto.appendChild(descripcion);
+
     if (typeof producto.precio === 'number') {
       const precio = document.createElement('p');
-      precio.textContent = `Precioo: S/ ${producto.precio}`;
+      precio.textContent = `Precio: S/ ${producto.precio}`;
       detalleProducto.appendChild(precio);
       const stock = document.createElement('p');
       stock.textContent = `Stock: ${producto.stock}`;
