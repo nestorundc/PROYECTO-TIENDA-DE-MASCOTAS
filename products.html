@@ -20,6 +20,7 @@
     </div>
   </div>
   <script src="productos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
     async function cargarHeader() {
       try {
@@ -36,7 +37,7 @@
 
     cargarHeader();
     const codigoProductoSelecionado = parseInt(new URLSearchParams(window.location.search).get('codigo'));
-    
+
     let productosStock = JSON.parse(localStorage.getItem('productosStock')) || productos;
     const producto = productosStock.find(p => p.codigo === codigoProductoSelecionado);
 
@@ -159,8 +160,15 @@
 
       localStorage.setItem('carrito', JSON.stringify(carrito));
 
-      alert('Producto agregado al carrito');
-      window.location.reload();
+      Swal.fire({
+        icon: 'success',
+        title: '¡Agregado al carrito!',
+        text: 'El producto se añadió correctamente.',
+        timer: 1500,
+        showConfirmButton: false
+      }).then(() => {
+        window.location.reload();
+      });
     });
 
   </script>
