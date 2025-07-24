@@ -1,0 +1,156 @@
+async function cargarHeader() {
+    try {
+        const respuesta = await fetch('header.html');
+        if (!respuesta.ok) {
+            throw new Error(`Error al cargar header: ${respuesta.status}`);
+        }
+        const html = await respuesta.text();
+        document.getElementById('header-container').innerHTML = html;
+    } catch (error) {
+        console.error('No se pudo cargar el header:', error);
+    }
+}
+
+cargarHeader();
+const codigoProductoSelecionado = parseInt(new URLSearchParams(window.location.search).get('codigo'));
+
+let productosStock = JSON.parse(localStorage.getItem('productosStock')) || productos;
+const producto = productosStock.find(p => p.codigo === codigoProductoSelecionado);
+
+const contenedor = document.getElementById('detalleProducto');
+const imagenProducto = document.querySelector('.imagenProducto');
+const nombreProducto = document.querySelector('.nombreProducto');
+const detalleProducto = document.querySelector('.detalleProducto');
+
+const img = document.createElement('img');
+img.src = producto.img
+img.alt = producto.nombre
+imagenProducto.appendChild(img);
+
+const nombre = document.createElement('h3');
+nombre.textContent = producto.nombre;
+nombreProducto.appendChild(nombre);
+
+const descripcion = document.createElement('p');
+descripcion.textContent = producto.descripcion;
+detalleProducto.appendChild(descripcion);
+
+if (typeof producto.precio === 'number') {
+    const precio = document.createElement('p');
+    precio.textContent = `Precio por kilo: S/ ${producto.precio}`;
+    detalleProducto.appendChild(precio);
+    const stock = document.createElement('p');
+    stock.textContent = `Stock: ${producto.stock}`;
+    detalleProducto.appendChild(stock);
+} else {
+    const label = document.createElement('label');
+    label.textContent = "Selecciona una talla:";
+    label.setAttribute("for", "selectTalla");
+    detalleProducto.appendChild(label);
+
+    const select = document.createElement('select');
+    select.id = "selectTalla";
+    select.style.marginLeft = "10px";
+
+    for (let talla in producto.precio) {
+        const option = document.createElement('option');
+        option.value = talla;
+        option.textContent = talla;
+        select.appendChild(option);
+    }
+
+    detalleProducto.appendChild(select);
+
+    const precioTalla = document.createElement('p');
+    const stockTalla = document.createElement('p');
+    detalleProducto.appendChild(precioTalla);
+    detalleProducto.appendChild(stockTalla);
+
+    select.addEventListener('change', () => {
+        const tallaSeleccionada = select.value;
+        precioTalla.textContent = `S/ ${producto.precio[tallaSeleccionada]}`;
+        stockTalla.textContent = `Stock disponible: ${producto.stock[tallaSeleccionada]} unidades`;
+    });
+
+    select.dispatchEvent(new Event('change'));
+}
+const labelCantidad = document.createElement('label');
+labelCantidad.textContent = "Cantidad:";
+labelCantidad.setAttribute("for", "inputCantidad");
+detalleProducto.appendChild(labelCantidad);
+
+const inputCantidad = document.createElement('input');
+inputCantidad.type = 'number';
+inputCantidad.id = 'inputCantidad';
+inputCantidad.min = 1;
+inputCantidad.value = 1;
+inputCantidad.style.marginLeft = "10px";
+detalleProducto.appendChild(inputCantidad);
+
+const botonCarrito = document.createElement('button');
+botonCarrito.textContent = "Añadir al carrito";
+botonCarrito.classList.add('botonCarrito');
+detalleProducto.appendChild(botonCarrito);
+
+botonCarrito.addEventListener('click', () => {
+    const tallaSeleccionada = (typeof producto.precio !== 'number') ? document.getElementById('selectTalla').value : null;
+    const cantidadSeleccionada = Math.max(1, parseInt(document.getElementById('inputCantidad').value) || 1);
+
+    if (typeof producto.stock === 'object' && tallaSeleccionada) {
+        if (producto.stock[tallaSeleccionada] < cantidadSeleccionada) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Stock insuficiente',
+                text: `Solo hay ${producto.stock[tallaSeleccionada]} unidades disponibles para la talla ${tallaSeleccionada}.`,
+            });
+            return;
+        }
+    } else if (typeof producto.stock === 'number') {
+        if (producto.stock < cantidadSeleccionada) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Stock insuficiente',
+                text: `Solo hay ${producto.stock} kilos disponibles.`,
+            });
+            return;
+        }
+    }
+
+    if (typeof producto.stock === 'object' && tallaSeleccionada) {
+        producto.stock[tallaSeleccionada] -= cantidadSeleccionada;
+    } else if (typeof producto.stock === 'number') {
+        producto.stock -= cantidadSeleccionada;
+    }
+
+    localStorage.setItem('productosStock', JSON.stringify(productosStock));
+
+    const productoCarrito = {
+        codigo: producto.codigo,
+        nombre: producto.nombre,
+        img: producto.img,
+        talla: tallaSeleccionada,
+        precio: (typeof producto.precio === 'number') ? producto.precio : producto.precio[tallaSeleccionada],
+        cantidad: cantidadSeleccionada
+    };
+
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+    const index = carrito.findIndex(item => item.codigo === productoCarrito.codigo && item.talla === productoCarrito.talla);
+    if (index !== -1) {
+        carrito[index].cantidad += cantidadSeleccionada;
+    } else {
+        carrito.push(productoCarrito);
+    }
+
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+
+    Swal.fire({
+        icon: 'success',
+        title: '¡Agregado al carrito!',
+        text: 'El producto se añadió correctamente.',
+        timer: 1500,
+        showConfirmButton: false
+    }).then(() => {
+        window.location.reload();
+    });
+});
