@@ -37,46 +37,56 @@ detalleProducto.appendChild(descripcion);
 
 if (typeof producto.precio === 'number') {
     const precio = document.createElement('p');
+    precio.classList.add('precioProducto');
     precio.textContent = `Precio por kilo: S/ ${producto.precio}`;
     detalleProducto.appendChild(precio);
+
     const stock = document.createElement('p');
+    stock.classList.add('stockProducto');
     stock.textContent = `Stock: ${producto.stock}`;
     detalleProducto.appendChild(stock);
+
 } else {
     const label = document.createElement('label');
     label.textContent = "Selecciona una talla:";
-    label.setAttribute("for", "selectTalla");
     label.classList.add('labelTalla');
     detalleProducto.appendChild(label);
 
-    const select = document.createElement('select');
-    select.id = "selectTalla";
-    select.style.marginLeft = "10px";
-
-    for (let talla in producto.precio) {
-        const option = document.createElement('option');
-        option.value = talla;
-        option.textContent = talla;
-        select.appendChild(option);
-    }
-
-    detalleProducto.appendChild(select);
+    const tallas = ["S", "M", "L", "XL"];
+    const contenedorBotones = document.createElement('div');
+    contenedorBotones.classList.add('botonesTalla');
+    detalleProducto.appendChild(contenedorBotones);
 
     const precioTalla = document.createElement('p');
     const stockTalla = document.createElement('p');
+    precioTalla.classList.add('precioTalla');
+    stockTalla.classList.add('stockTalla');
     detalleProducto.appendChild(precioTalla);
     detalleProducto.appendChild(stockTalla);
 
-    select.addEventListener('change', () => {
-        precioTalla.classList.add('precioTalla');
-        stockTalla.classList.add('stockTalla');
-        const tallaSeleccionada = select.value;
-        precioTalla.textContent = `S/ ${producto.precio[tallaSeleccionada]}`;
-        stockTalla.textContent = `Stock disponible: ${producto.stock[tallaSeleccionada]} unidades`;
-    });
+    tallas.forEach(talla => {
+        const boton = document.createElement('button');
+        boton.textContent = talla;
+        boton.classList.add('botonTalla');
+        boton.dataset.talla = talla;
 
-    select.dispatchEvent(new Event('change'));
+        boton.addEventListener('click', () => {
+
+            const botones = contenedorBotones.querySelectorAll('button');
+            botones.forEach(b => b.classList.remove('activo'));
+
+            boton.classList.add('activo');
+
+            precioTalla.textContent = `S/ ${producto.precio[talla]}`;
+            stockTalla.textContent = `Stock disponible: ${producto.stock[talla]} unidades`;
+
+            producto.tallaSeleccionada = talla;
+        });
+
+        contenedorBotones.appendChild(boton);
+    });
 }
+
 
 const labelCantidad = document.createElement('label');
 labelCantidad.textContent = "Cantidad:";
@@ -98,7 +108,18 @@ botonCarrito.classList.add('botonCarrito');
 detalleProducto.appendChild(botonCarrito);
 
 botonCarrito.addEventListener('click', () => {
-    const tallaSeleccionada = (typeof producto.precio !== 'number') ? document.getElementById('selectTalla').value : null;
+    const tallaSeleccionada = (typeof producto.precio !== 'number') 
+    ? document.querySelector('.botonTalla.activo')?.dataset.talla 
+    : null;
+    if (typeof producto.precio !== 'number' && !tallaSeleccionada) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Talla no seleccionada',
+        text: 'Por favor, selecciona una talla antes de añadir al carrito.',
+    });
+    return;
+}
+
     const cantidadSeleccionada = Math.max(1, parseInt(document.getElementById('inputCantidad').value) || 1);
 
     if (typeof producto.stock === 'object' && tallaSeleccionada) {
