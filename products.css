@@ -51,9 +51,6 @@
     font-size: 18px;
 }
 
-.detalleProducto select {
-    padding: 5px 15px;
-}
 
 .detalleProducto input {
     width: 50px;
@@ -73,6 +70,39 @@
   gap: 15px;
   margin: 15px 0;
   justify-content: center;
+}
+.cantidadWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.btnCantidad {
+  width: 35px;
+  height: 35px;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  background-color: #ff4d4d;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btnCantidad:hover {
+  background-color: #e53935;
+}
+
+#inputCantidad {
+  width: 50px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 6px 0;
 }
 
 .botonTalla {

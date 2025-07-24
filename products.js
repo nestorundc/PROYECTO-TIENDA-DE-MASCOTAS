@@ -88,19 +88,40 @@ if (typeof producto.precio === 'number') {
 }
 
 
-const labelCantidad = document.createElement('label');
-labelCantidad.textContent = "Cantidad:";
-labelCantidad.classList.add('labelCantidad');
-labelCantidad.setAttribute("for", "inputCantidad");
-detalleProducto.appendChild(labelCantidad);
+const cantidadWrapper = document.createElement('div');
+cantidadWrapper.classList.add('cantidadWrapper');
+
+const botonMenos = document.createElement('button');
+botonMenos.textContent = '-';
+botonMenos.className = 'btnCantidad';
 
 const inputCantidad = document.createElement('input');
-inputCantidad.type = 'number';
+inputCantidad.type = 'text';
 inputCantidad.id = 'inputCantidad';
-inputCantidad.min = 1;
 inputCantidad.value = 1;
-inputCantidad.style.marginLeft = "10px";
-detalleProducto.appendChild(inputCantidad);
+inputCantidad.readOnly = true; // Para que no puedan escribir directamente
+
+const botonMas = document.createElement('button');
+botonMas.textContent = '+';
+botonMas.className = 'btnCantidad';
+
+botonMenos.addEventListener('click', () => {
+  let cantidad = parseInt(inputCantidad.value);
+  if (cantidad > 1) inputCantidad.value = cantidad - 1;
+});
+
+botonMas.addEventListener('click', () => {
+  let cantidad = parseInt(inputCantidad.value);
+  inputCantidad.value = cantidad + 1;
+});
+
+cantidadWrapper.appendChild(botonMenos);
+cantidadWrapper.appendChild(inputCantidad);
+cantidadWrapper.appendChild(botonMas);
+
+detalleProducto.appendChild(cantidadWrapper);
+
+
 
 const botonCarrito = document.createElement('button');
 botonCarrito.textContent = "Añadir al carrito";
